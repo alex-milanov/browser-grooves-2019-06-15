@@ -6,14 +6,14 @@ const $ = Rx.Observable;
 
 const prettify = require('code-prettify');
 
-const obj = require('iblokz/common/obj');
+const {obj} = require('iblokz-data');
 
 // dom
 const {
 	h, section, button, span, h1, h2, h3,
 	form, fieldset, label, legend, input, select, option,
 	ul, li, p
-} = require('iblokz/adapters/vdom');
+} = require('iblokz-snabbdom-helpers');
 
 // components
 const code = require('./code');
@@ -32,7 +32,7 @@ const prepAnim = (pos, {index, old, direction, transitioning, anim}) => Object.a
 );
 
 const parseEl = el => (el.tag === 'code')
-	? code(el.text, el.type)
+	? code({source: el.text, type: el.type})
 	: (el.tag === 'p' || el.tag === 'li')
 		? h(el.tag, {props: {innerHTML: el.text}})
 		: h(el.tag, el.text || el.children && el.children.map(parseEl) || '');
@@ -41,7 +41,7 @@ const parseSlides = slides => slides.map(col =>
 	col.map(parseEl)
 );
 
-module.exports = ({state, actions}) => section('.slides[tabindex="0"]',
+module.exports = ({state, actions}) => section('.slides.fadeIn[tabindex="0"]',
 	arrFlatten(parseSlides(state.slides).map((col, i) =>
 		col.map((slide, k) =>
 			section({

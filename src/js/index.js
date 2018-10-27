@@ -7,23 +7,26 @@ const $ = Rx.Observable;
 window.marked = require('marked');
 
 // iblokz
-const vdom = require('iblokz/adapters/vdom');
-const obj = require('iblokz/common/obj');
-const arr = require('iblokz/common/arr');
+const vdom = require('iblokz-snabbdom-helpers');
+const {obj, arr} = require('iblokz-data');
 
 // app
-const app = require('iblokz/app/util');
-let actions = app.adapt(require('./actions'));
+const app = require('./util/app');
+let actions = require('./actions');
 let ui = require('./ui');
 let actions$;
+const state$ = new Rx.BehaviorSubject();
 
 const gamepad = require('./util/gamepad');
+
+// adapt actions
+actions = app.adapt(actions);
 
 // hot reloading
 if (module.hot) {
 	// actions
 	actions$ = $.fromEventPattern(
-		h => module.hot.accept("./actions", h)
+    h => module.hot.accept("./actions", h)
 	).flatMap(() => {
 		actions = app.adapt(require('./actions'));
 		return actions.stream.startWith(state => state);
@@ -31,18 +34,24 @@ if (module.hot) {
 	// ui
 	module.hot.accept("./ui", function() {
 		ui = require('./ui');
-		actions.stream.onNext(state => state);
+		// actions.ping();
 	});
 } else {
 	actions$ = actions.stream;
 }
-
-// actions -> state
-const state$ = actions$
+// reduce actions to state
+actions$
+	/*
+	.map(action => (
+		action.path && console.log(action.path.join('.'), action.payload),
+		console.log(action),
+		action)a
+	)
+	*/
 	.startWith(() => actions.initial)
 	.scan((state, change) => change(state), {})
 	.map(state => (console.log(state), state))
-	.share();
+	.subscribe(state => state$.onNext(state));
 
 document.addEventListener('keydown', e => {
 	console.log(e.key, e.target, e);
@@ -50,15 +59,16 @@ document.addEventListener('keydown', e => {
 		switch (e.key) {
 			case 'Escape':
 				e.target.blur();
+				e.preventDefault();
 				window
 					.getSelection()
 					.removeAllRanges();
 				document.querySelector('.slides').focus();
 				break;
-			case 'Tab':
-				e.preventDefault();
-				document.execCommand('insertHTML', false, '&#009');
-				break;
+			// case 'Tab':
+			// 	e.preventDefault();
+			// 	document.execCommand('insertHTML', false, '&#009');
+			// 	break;
 			default:
 				break;
 		}

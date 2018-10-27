@@ -1,7 +1,7 @@
 'use strict';
 
-const obj = require('iblokz/common/obj');
-const request = require('iblokz/adapters/request');
+const {obj} = require('iblokz-data');
+const request = require('superagent');
 const marked = require('marked');
 
 // initial
@@ -128,16 +128,16 @@ const parseSlides = list => list.reduce((slides, el, i) => {
 	return slides;
 }, []);
 
-const loadSlides = () => request.get('assets/md/slides.md').observe()
-	.map(req => marked.lexer(req.text, marked.defaults))
-	.map(slides => (console.log({slides}), slides))
-	.map(slides => slides.map(el =>
+const loadSlides = () => request.get('assets/md/slides.md')
+	.then(req => marked.lexer(req.text, marked.defaults))
+	.then(slides => (console.log({slides}), slides))
+	.then(slides => slides.map(el =>
 		(el.type === 'paragraph' || el.type === 'text')
 			? obj.patch(el, 'text', marked.inlineLexer(el.text, slides.links)) : el)
 	)
-	.map(slides => (console.log({slides}), slides))
-	.map(raw => parseSlides(raw))
-	.map(slides => state => Object.assign({}, state, {slides}));
+	.then(slides => (console.log({slides}), slides))
+	.then(raw => parseSlides(raw))
+	.then(slides => state => Object.assign({}, state, {slides}));
 
 module.exports = {
 	initial,

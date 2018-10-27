@@ -3,10 +3,16 @@
 const Rx = require('rx');
 const $ = Rx.Observable;
 
-const RxNode = require('rx-node');
-const raf = require('raf-stream');
+const raf = require('raf');
 
-const frame = node => RxNode.fromStream(raf(node))
+const tick = cb => raf(function(dt) {
+	cb(dt);
+	tick(cb);
+});
+
+const frame = () => $.create(
+	obs => tick(dt => obs.onNext(dt))
+)
 	.filter(dt => dt !== 0)
 	.share();
 

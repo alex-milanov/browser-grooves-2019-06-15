@@ -1,55 +1,63 @@
-
-
 // anim
-+keyframes(moveToTop)
+@keyframes moveToTop
   to
     opacity: 0.3
     transform: translateY(-100%)
 
-+keyframes(moveFromTop)
+@keyframes moveFromTop
   from
     opacity: 0.3
     transform: translateY(-100%)
 
-+keyframes(moveToLeft)
+@keyframes moveToLeft
   to
     opacity: 0.3
     transform: translateX(-100%)
 
-+keyframes(moveFromLeft)
+@keyframes moveFromLeft
   from
     opacity: 0.3
     transform: translateX(-100%)
 
-+keyframes(moveToBottom)
+@keyframes moveToBottom
   to
     opacity: 0.3
     transform: translateY(100%)
 
-+keyframes(moveFromBottom)
+@keyframes moveFromBottom
   from
     opacity: 0.3
     transform: translateY(100%)
 
-+keyframes(moveToRight)
+@keyframes moveToRight
   to
     opacity: 0.3
     transform: translateX(100%)
 
-+keyframes(moveFromRight)
+@keyframes moveFromRight
   from
     opacity: 0.3
     transform: translateX(100%)
 
-+keyframes(scaleDown)
+@keyframes scaleDown
   to
     opacity: 0
     transform: scale(0.7)
 
-+keyframes(scaleUp)
+@keyframes scaleUp
   from
     opacity: 0
     transform: scale(0.7)
+
+@keyframes fadeIn
+	from
+		opacity: 0
+	to
+		opacity: 1
+
+@keyframes fadeOut
+	to
+		opacity: 0
 
 .moveToTop
   animation: moveToTop .6s ease both
@@ -80,3 +88,15 @@
 
 .scaleUp
   animation: scaleUp .4s ease-in both
+
+.fadeIn
+	animation: fadeIn .4s ease-in both
+
+.fadeOut
+	animation: fadeOut .4s ease-in both
+
+.opaque
+	opacity: 1
+
+.transparent
+	opacity: 0

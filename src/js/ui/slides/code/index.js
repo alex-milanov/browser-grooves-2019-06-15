@@ -6,14 +6,25 @@ const $ = Rx.Observable;
 
 const prettify = require('code-prettify');
 const vm = require('../../../util/vm');
+const caret = require('../../../util/caret');
+const app = require('../../../util/app');
 
 // dom
-const vdom = require('iblokz/adapters/vdom');
+const vdom = require('iblokz-snabbdom-helpers');
 const {
 	section, button, span, h1, h2, h3, pre, code,
 	form, fieldset, label, legend, input, select, option,
 	ul, li, h, p
 } = vdom;
+
+// libraries
+const d3 = require('d3');
+const THREE = require('three');
+
+const libs = {
+	d3,
+	THREE
+};
 
 const unprettify = html => {
 	const tDiv = document.createElement('div');
@@ -31,52 +42,6 @@ const unprettify = html => {
 	return text;
 };
 
-const getParent = (el, tagName) => (el.parentNode.tagName === tagName)
-	? el.parentNode
-	: getParent(el.parentNode, tagName);
-
-const getElIndex = el => Array.from(el.parentNode.children).indexOf(el);
-
-const getRangePoint = (el, offset) =>
-	(el.nodeType === 3 || el.childNodes.length === 0)
-		? ({el, offset: (el.textContent.length < offset) ? el.textContent.length : offset})
-		: Array.from(el.childNodes).reduce(
-			(rp, child) => (rp.el !== el)
-				? rp
-				: (child.textContent.length >= rp.offset)
-					? getRangePoint(child, rp.offset)
-					: {el, offset: rp.offset - child.textContent.length},
-			{el, offset}
-		);
-
-const caret = {
-	get: el => {
-		let range = window.getSelection().getRangeAt(0);
-		let parentLi = (range.startContainer.tagName === 'LI')
-			? range.startContainer : getParent(range.startContainer, 'LI');
-		let colRange = document.createRange();
-		colRange.setStart(parentLi, 0);
-		colRange.setEnd(range.startContainer, range.startOffset);
-		const row = getElIndex(parentLi);
-		const col = colRange.toString().length;
-		return {
-			row,
-			col
-		};
-	},
-	set: (el, pos) => {
-		const parentLi = Array.from(el.querySelectorAll('li'))[pos.row];
-		const rp = getRangePoint(parentLi, pos.col);
-		console.log(rp);
-		let range = document.createRange();
-		range.setStart(rp.el, rp.offset);
-		range.setEnd(rp.el, rp.offset);
-		const sel = window.getSelection();
-		sel.removeAllRanges();
-		sel.addRange(range);
-	}
-};
-
 const sandbox = (source, iframe, context = {}, cb) => {
 	let log = [];
 	let err = null;
@@ -89,7 +54,9 @@ const sandbox = (source, iframe, context = {}, cb) => {
 			}},
 			Rx,
 			$,
-			vdom
+			vdom,
+			app,
+			navigator
 		}));
 	} catch (e) {
 		err = e;
@@ -97,23 +64,85 @@ const sandbox = (source, iframe, context = {}, cb) => {
 	cb({res, log, err});
 };
 
+const cleanupCode = code => code
+	.split('\n')
+	.map(s => s.trimRight())
+	.map(s => s.replace(new RegExp('&nbps;', 'ig'), ''))
+	.filter(s => s !== '' && s !== ' ')
+	.join('\n');
+
 const removeChildren = (el, selector = '*') => Array.from(el.querySelectorAll(selector)).forEach(child => {
 	el.removeChild(child);
 });
 
 const createBefore = (type, el) => {
-	removeChildren(el.parentNode, 'iframe');
 	let newEl = document.createElement(type);
 	el.parentNode.insertBefore(newEl, el);
 	return newEl;
 };
 
-module.exports = (source, type = 'js') => span('.codebin', [
-	code(`.source[type="${type}"][contenteditable="true"][spellcheck="false"]`, {
+// clear and prep output and console
+const prepOutput = parentNode => {
+	removeChildren(parentNode, 'iframe');
+	let iframe = createBefore('IFRAME', parentNode.querySelector('.console'));
+	iframe.classList.add('sandbox');
+	iframe.contentWindow.document.body.innerHTML = `
+<style>
+	* {font-size: 18px;}
+	body {padding: 0px; margin: 0px}
+	p, pre {padding: 4px;}
+</style>
+<section id="ui"></section>
+`;
+	parentNode.querySelector('.console').innerHTML = '';
+	return iframe;
+};
+
+const process = (type, sourceCode, iframe) => {
+	const console$ = new Rx.ReplaySubject();
+	if (type === 'js') {
+		sandbox(sourceCode, iframe, libs, ({res, log, err}) => {
+			if (err) console$.onNext(`<p class="err">${err}</p>\n`);
+			if (log) log.map(l => prettify.prettyPrintOne(JSON.stringify(l)))
+				.forEach(l => console$.onNext(`${l}\n`));
+		});
+	}
+	return console$;
+};
+
+// ui
+module.exports = ({
+	source, pos = {start: {row: 0, col: 0}, end: {row: 0, col: 0}}, type = 'js',
+	change = code => {},
+	updatePos = pos => {},
+	undo = () => {},
+	redo = () => {}
+}) => span('.codebin', [
+	code(`.source[type="${type}"][spellcheck="false"][contenteditable="true"][spellcheck="false"]`, {
+		hook: {
+			// insert: ({elm}) => caret.set(elm, pos),
+			// update: ({elm}) => caret.set(elm, pos)
+		},
 		props: {
-			innerHTML: prettify.prettyPrintOne(source, type, true)
+			innerHTML: prettify.prettyPrintOne(source, type, true),
+			spellcheck: false
 		},
 		on: {
+			keydown: ev => {
+				console.log(`>${ev.key}<`);
+				if (ev.key === 'Tab') {
+					ev.preventDefault();
+					caret.indent(ev.target, ev.shiftKey === true ? 'left' : 'right');
+					ev.target.dispatchEvent(new Event('input'));
+					console.log('tabbing');
+					// document.execCommand('insertHTML', false, '&#009');
+					// document.execCommand('indent');
+				} else if (ev.key === 'z' && ev.ctrlKey) {
+					undo();
+				} else if (ev.key === 'y' && ev.ctrlKey) {
+					redo();
+				}
+			},
 			focus: ({target}) => [$.fromEvent(target, 'input')
 				.map(ev => ev.target)
 				.takeUntil($.fromEvent(target, 'blur'))
@@ -127,19 +156,32 @@ module.exports = (source, type = 'js') => span('.codebin', [
 						return 1;
 					}),
 					inputs$.debounce(500).map(el => {
-						if (type === 'js') {
-							const sourceCode = unprettify(el.innerHTML);
-							removeChildren(el.parentNode.querySelector('.output'), 'iframe');
-							let iframe = createBefore('IFRAME', el.parentNode.querySelector('.console'));
-							iframe.contentWindow.document.body.innerHTML = '<style>* {font-size: 24px;}</style><section id="ui"></section>';
-							sandbox(sourceCode, iframe, {}, ({res, log, err}) => {
-								el.parentNode.querySelector('.console').innerHTML = [].concat(
-									err ? [`<p class="err">${err}</p>`] : [],
-									log ? log.map(l => prettify.prettyPrintOne(JSON.stringify(l))) : []
-									// res ? [`> ${res}`] : []
-								).join('\n\n');
+						const pos = caret.get(el);
+						console.log(pos);
+						let sourceCode = unprettify(el.innerHTML);
+						change(sourceCode, pos);
+						let iframe = prepOutput(el.parentNode.querySelector('.output'));
+						process(type, cleanupCode(sourceCode), iframe)
+							.catch(err => console.log(err))
+							.subscribe(l => {
+								console.log(l);
+								el.parentNode.querySelector('.console').innerHTML += l;
 							});
-						}
+						// setTimeout(() => caret.set(el, pos));
+						/*
+						sourceCode = cleanupCode(sourceCode);
+						// clear and prep output and console
+						let iframe = prepOutput(el.parentNode.querySelector('.output'));
+
+						// process code
+						process(type, sourceCode, iframe)
+							.catch(err => console.log(err))
+							.subscribe(l => {
+								console.log(l);
+								el.parentNode.querySelector('.console').innerHTML += l;
+							});
+						*/
+
 						return 1;
 					})
 			)).pop().subscribe(),
@@ -149,33 +191,41 @@ module.exports = (source, type = 'js') => span('.codebin', [
 			}
 		}
 	}),
-	(type === 'js')
-		? span('.output', [
-			h('iframe.sandbox', {
-				hook: {
-					insert: ({elm}) => {
-						elm.contentWindow.document.body.innerHTML = '<section id="ui"></section>';
-					}
+	span('.output', [
+		h('iframe.sandbox', {
+			hook: {
+				insert: ({elm}) => {
+					elm.contentWindow.document.body.innerHTML = '<section id="ui"></section>';
 				}
-			}),
-			code('.console', {
-				hook: {
-					insert: ({elm}) => {
-						if (type === 'js') {
-							removeChildren(elm.parentNode, 'iframe');
-							let iframe = createBefore('IFRAME', elm);
-							iframe.contentWindow.document.body.innerHTML = '<style>* {font-size: 24px;}</style><section id="ui"></section>';
-							sandbox(source, iframe, {}, ({res, log, err}) => {
-								elm.innerHTML = [].concat(
-									err ? [`<span class="err">${err}</span>`] : [],
-									log ? log.map(l => prettify.prettyPrintOne(JSON.stringify(l))) : []
-									// res ? [`> ${res}`] : []
-								).join('\n\n');
-							});
-						}
-					}
+			}
+		}),
+		code('.console', {
+			hook: {
+				insert: ({elm}) => {
+					// clear and prep output and console
+					let iframe = prepOutput(elm.parentNode);
+
+					// process code
+					process(type, cleanupCode(source), iframe)
+						.catch(err => console.log(err))
+						.subscribe(l => {
+							console.log(l);
+							elm.innerHTML += l;
+						});
 				}
-			})
-		])
-	: ''
+				// update: ({elm}) => {
+				// 	// clear and prep output and console
+				// 	let iframe = prepOutput(elm.parentNode);
+        //
+				// 	// process code
+				// 	process(type, cleanupCode(source), iframe)
+				// 		.catch(err => console.log(err))
+				// 		.subscribe(l => {
+				// 			console.log(l);
+				// 			elm.innerHTML += l;
+				// 		});
+				// }
+			}
+		})
+	])
 ]);

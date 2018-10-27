@@ -1,7 +1,7 @@
 .slides
 	+pos
 	overflow: hidden
-	background: #2f437b
+	background-color: rgba(#0B295B, 0.7)
 	perspective: 1200px
 	transform-style: preserve-3d
 	section
@@ -17,11 +17,18 @@
 		width: 100%
 		height: 100%
 		// 57a0e8, 77ace0
-		background: radial-gradient(ellipse at center, #77ace0 0%, #2f437b 100%)
+		// background: radial-gradient(ellipse at center, rgba(#77ace0, 0.7) 0%, rgba(#2f437b, 0.7) 100%)
+		// background: radial-gradient(ellipse at center, rgba(#cedce7, 1) 0%, rgba(#596a72, 1) 100%)
+		// #0b5b3a, #31969b
+		// background: radial-gradient(ellipse at center, rgba(#7f0e76, 0.3) 0%, rgba(#a544d6, 0.5) 80%, rgba(#a544d6, 0.7) 100%)
+		background: radial-gradient(ellipse at center, rgba(#0B295B, 0.1) 0%, rgba(#397BB2, 0.3) 70%, rgba(#397BB2, 0.5) 100%)
 		z-index: 0
 		> span
 			+centerer
-			min-width: 480px
+			left: 0px
+			transform: translateY(-50%)
+			width: 100%
+			text-align: center
 			h1, h2, h3
 				text-align: center
 			h1
@@ -40,3 +47,10 @@
 			img
 				max-height: 100%
 				max-width: 100%
+			ul
+				display: inline-block
+				text-align: left
+.clip
+	position: absolute
+	top: 0px
+	right: 0px
