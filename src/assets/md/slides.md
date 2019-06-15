@@ -367,7 +367,17 @@ document.querySelector('#ui').appendChild(inputsEl);
 
 ```
 
-## Examples
+### Links and Resources
+- https://en.wikipedia.org/wiki/MIDI
+- https://www.midi.org/specifications-old/
+- [Youtube: The Basics of MIDI Playlist](https://www.youtube.com/watch?v=HaSkpYXAVBM&list=PLkX4vguQdLMiE1ya62wVb45A_gSegBQmc&index=1)
+
+
+### Wall of shame
+- [Bug 836897 (webmidi) Implement the WebMIDI API](https://bugzilla.mozilla.org/show_bug.cgi?id=836897)
+- Bugzilla: Opened	7 years ago
+
+## Apps
 
 ### The Jam Station
 ![jam-station](./assets/img/jam-station.png)
