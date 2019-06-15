@@ -1,7 +1,10 @@
-# Intro to Creative Coding
-... with JavaScript and Web APIs
+# Browser grooves
+a Brief introduction to **WebAudio** and **WebMIDI** APIs
 
 ## Motivation
+
+### Music Tech Meetups
+[![music-tech-meetup-2019-06-11](./assets/img/music-tech-meetup-2019-06-11.png)](./assets/videos/music-tech-meetup-2019-06-11.mp4)
 
 ### My Framework
 ![app-architecture](./assets/img/app-architecture.png)
@@ -35,93 +38,30 @@ const ui$ = state$.map(state => ui({state, actions}));
 vdom.patchStream(ui$, document.querySelector('#ui'));
 ```
 
-## D3
-
-### Example 1
-```js
-
-var nodes = [].concat(
-	d3.range(80).map(function() { return {type: "a"}; }),
-	d3.range(160).map(function() { return {type: "b"}; })
-);
-
-var node = d3.select(document.querySelector('#ui'))
-	.append('svg')
-	.attr('width', '640').attr('height', '400')
-	.attr('viewBox', '-320 -200 640 400')
-	.append("g")
-	.selectAll("circle")
-	.data(nodes)
-	.enter().append("circle")
-	.attr("r", 2.5)
-	.attr("fill", function(d) { return d.type === "a" ? "brown" : "aqua"; })
-
-var simulation = d3.forceSimulation(nodes)
-	.force("charge", d3.forceCollide().radius(5))
-	.force("r", d3.forceRadial(function(d) { return d.type === "a" ? 100 : 200;}))
-	.on("tick", ticked);
-
-function ticked() {
-	node
-		.attr("cx", function(d) { return d.x; })
-		.attr("cy", function(d) { return d.y; });
-}
-```
-
-### Resources
-- https://d3js.org
-
-## THREE
-
-### Example 1
-```js
-var camera, scene, renderer;
-var mesh;
-const dim = [window.innerWidth, 400];
-init();
-animate();
-function init() {
-	camera = new THREE.PerspectiveCamera( 70, dim[0] / dim[1], 1, 1000 );
-	camera.position.z = 400;
-	scene = new THREE.Scene();
-	var texture = new THREE.TextureLoader().load('/assets/img/crate.gif');
-	var geometry = new THREE.BoxBufferGeometry( 200, 200, 200 );
-	var material = new THREE.MeshBasicMaterial( { map: texture } );
-	mesh = new THREE.Mesh( geometry, material );
-	scene.add( mesh );
-	renderer = new THREE.WebGLRenderer( { antialias: true } );
-	renderer.setPixelRatio( window.devicePixelRatio );
-	renderer.setSize( dim[0], dim[1] );
-	document.querySelector('#ui').appendChild( renderer.domElement );
-	//
-	window.addEventListener( 'resize', onWindowResize, false );
-}
-function onWindowResize() {
-	camera.aspect = dim[0] / dim[1];
-	camera.updateProjectionMatrix();
-	renderer.setSize( dim[0], dim[1] );
-}
-function animate() {
-	requestAnimationFrame( animate );
-	mesh.rotation.x += 0.005;
-	mesh.rotation.y += 0.01;
-	renderer.render( scene, camera );
-}
-
-```
-
-### Resources
-- https://threejs.org/
-
 ## Web Audio
+![patchage](./assets/img/patchage.jpeg)
 
-### Make Sound
+### The Context
+![oscillator-basic](./assets/svg/audiocontext.svg)
+
+-
+
+`var context = new AudioContext();`
+
+### Some Oscillation
+![oscillator-basic](./assets/svg/oscillator-basic.svg)
+
+-
+
+`var oscillator = context.createOscillator();`
+
+`oscillator.connect(context.destination);`
+
+
+### Make some noise
+![oscillator-basic](./assets/svg/oscillator-basic.svg)
+
 ```js
-var button = document.createElement('button');
-button.innerHTML = 'Make Sound';
-button.addEventListener('click', ev => makeSound())
-document.querySelector('#ui').appendChild(button);
-
 // get audio context instance
 var context = new AudioContext()
 
@@ -133,18 +73,20 @@ function makeSound() {
 	// trigger it to start and schedule it to stop after 2 sec
 	oscillator.start(context.currentTime)
 	oscillator.stop(context.currentTime + 2)
-	// disconnect it after 2 sec
+	// disconnect it also after 2 sec
 	setTimeout(() => oscillator.disconnect(context.destination),2000)
 }
-```
 
-### Sawtooth A
-```js
+// some ui
 var button = document.createElement('button');
 button.innerHTML = 'Make Sound';
 button.addEventListener('click', ev => makeSound())
 document.querySelector('#ui').appendChild(button);
+```
 
+### hmm...
+![oscillator-basic](./assets/svg/oscillator-basic.svg)
+```js
 // get audio context instance
 var context = new AudioContext()
 
@@ -153,7 +95,9 @@ function makeSound() {
 	var oscillator = context.createOscillator()
 	oscillator.connect(context.destination)
 
+	// set the type to sawtooth wave
 	oscillator.type = 'sawtooth'
+	// set the frequency to 880Hz
 	oscillator.frequency.value = 880
 
 	// trigger it to start and schedule it to stop after 1 sec
@@ -162,14 +106,75 @@ function makeSound() {
 	// disconnect it after 1 sec
 	setTimeout(() => oscillator.disconnect(context.destination),1000)
 }
+
+// some ui
+var button = document.createElement('button');
+button.innerHTML = 'Make Sound';
+button.addEventListener('click', ev => makeSound())
+document.querySelector('#ui').appendChild(button);
 ```
 
-### A Melody
+### Mega Gain
+![oscillator-basic](./assets/svg/gain.svg)
+
+-
+
+`var volume = context.createGain()`
+
+`volume.gain.value = 0.4`
+
+`volume.connect(context.destination)`
+
+### Volume Control
+![oscillator-basic](./assets/svg/gain.svg)
 ```js
+// get audio context instance
+var context = new AudioContext();
+// create a gain node to control volume
+var volume = context.createGain();
+volume.gain.value = 0.4;
+volume.connect(context.destination);
+
+function changeVolume(value) {
+	volume.gain.value = value;
+}
+
+function makeSound() {
+	// create a new oscillator node and connect it to the context destination
+	var oscillator = context.createOscillator();
+	oscillator.connect(volume);
+
+	// set the type to sawtooth wave
+	oscillator.type = 'sawtooth';
+	// set the frequency to 880Hz
+	oscillator.frequency.value = 880;
+
+	// trigger it to start and schedule it to stop after 1 sec
+	oscillator.start(context.currentTime);
+	oscillator.stop(context.currentTime + 1);
+	// disconnect it after 1 sec
+	setTimeout(() => oscillator.disconnect(context.destination),1000);
+}
+
+// some ui
 var button = document.createElement('button');
-button.innerHTML = 'Play Melody';
-button.addEventListener('click', ev => playMelody())
+button.innerHTML = 'Make Sound';
+button.addEventListener('click', ev => makeSound());
 document.querySelector('#ui').appendChild(button);
+// volume control
+var slider = document.createElement('input');
+slider.type = 'range';
+slider.min = 0;
+slider.max = 1;
+slider.step = 0.1;
+slider.value = volume.gain.value;
+slider.addEventListener('change', ev => changeVolume(ev.target.value))
+document.querySelector('#ui').appendChild(slider);
+```
+
+### cheezy melody
+
+```js
 
 // get audio context instance
 var context = new AudioContext()
@@ -219,101 +224,70 @@ function noteToFrequency(note) {
 
 	return 440 * Math.pow(2, (keyNumber - 49) / 12);
 }
-```
 
-### Keyboard playing
-```js
-const keys = ['z', 's', 'x', 'd', 'c', 'v', 'g', 'b', 'h', 'n', 'j', 'm'];
-const notes = ['C4', 'C#4', 'D4', 'D#4', 'E4', 'F4', 'F#4', 'G4', 'G#4', 'A4', 'A#4', 'B4'];
-document.querySelector('#ui')
-	.addEventListener('keyup', ev =>
-		ev.key && keys.indexOf(ev.key) > -1
-			&& makeSound(notes[keys.indexOf(ev.key)])
-	)
-document.querySelector('#ui').appendChild(
-	document.createElement('textarea')
-)
-
-// get audio context instance
-var context = new AudioContext()
-
-function makeSound(note = 'A4', start = 0) {
-
-	// create a new oscillator node and connect it to the context destination
-	var oscillator = context.createOscillator()
-	oscillator.connect(context.destination)
-
-	oscillator.type = 'sawtooth'
-	oscillator.frequency.value = noteToFrequency(note)
-
-	// trigger it to start and schedule it to stop after 1 sec
-	oscillator.start(context.currentTime + start)
-	oscillator.stop(context.currentTime + start + 1)
-	// disconnect it after 1 sec
-	setTimeout(() => oscillator.disconnect(context.destination), (start + 1) * 1000)
-}
-
-function noteToFrequency(note) {
-	var notes = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#'];
-	var keyNumber;
-	var octave;
-
-	if (note.length === 3) {
-		octave = note.charAt(2);
-	} else {
-		octave = note.charAt(1);
-	}
-
-	keyNumber = notes.indexOf(note.slice(0, -1));
-
-	if (keyNumber < 3) {
-		keyNumber = keyNumber + 12 + ((octave - 1) * 12) + 1;
-	} else {
-		keyNumber = keyNumber + ((octave - 1) * 12) + 1;
-	}
-
-	return 440 * Math.pow(2, (keyNumber - 49) / 12);
-}
+// ui
+var button = document.createElement('button');
+button.innerHTML = 'Play Melody';
+button.addEventListener('click', ev => playMelody())
+document.querySelector('#ui').appendChild(button);
 ```
 
 ### Useful Resources
 - http://mmckegg.github.io/web-audio-school/
+- http://g200kg.github.io/WebAudioDesigner/
 - https://www.webaudioweekly.com/
 
+
 ## Web MIDI
+![midi-setup](./assets/img/midi-setup.jpg)
 
-### Basic Interaction
+### MIDI
+[![midi-desc](./assets/img/midi-desc.png)](https://en.wikipedia.org/wiki/MIDI)
+- technical standard from early 80s
+- communications protocol, digital interface & electrical connectors
+- (not the piano roll editor)
+
+### General MIDI
+[![general-midi](./assets/img/general-midi.png)](https://en.wikipedia.org/wiki/General_MIDI)
+- standardized specification for
+- electronic musical instruments that respond to MIDI messages
+- extensions: Yamaha XG, Roland GS
+
+### MIDI Message
+[![midi-message](./assets/img/midi-message.png)](https://www.midi.org/specifications-old/item/table-1-summary-of-midi-message)
+- 3 8bit words (bytes) transmitted serially at a rate of 31.25 kbit/s
+- 1 status and 2 data bytes
+- channel voice: noteOn/noteOff, control change, program change
+- channel mode, system common, system real-time
+
+
+### Code Example
 ```js
-
-var inputsEl = document.createElement('pre');
-inputsEl.innerHTML = 'Inputs:';
-document.querySelector('#ui').appendChild(inputsEl);
-
+// request midi access
 if (navigator.requestMIDIAccess)
 	navigator.requestMIDIAccess().then(onMIDIInit, onMIDIReject)
 
-function numberToNote(number) {
-	var notes = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
-	var octave = parseInt(number/12, 10);
-	var step = number - octave * 12;
-	var pitch = notes[step];
-	return {pitch: pitch+""+octave, midi: number};
-}
-function hookUpMIDIInput(midiAccess) {
-	let inputs = [];
-	midiAccess.inputs.forEach(input => inputs.push(input));
-	inputs.forEach(input => {
-		input.onmidimessage = MIDIMessageEventHandler
-	});
-	inputsEl.innerHTML = `Inputs: \n${inputs.map(i => i.name).join('\n')}`;
-}
 function onMIDIInit(midiAccess) {
 	hookUpMIDIInput(midiAccess);
 	midiAccess.onstatechange= connection => hookUpMIDIInput(connection.currentTarget);
 }
+
 function onMIDIReject(err) {
 	alert("The MIDI system failed to start.  You're gonna have a bad time.");
 }
+
+function hookUpMIDIInput(midiAccess) {
+	let inputs = [];
+	// push the inputs in array
+	midiAccess.inputs.forEach(input => inputs.push(input));
+	// hook midi messages
+	inputs.forEach(input => {
+		input.onmidimessage = MIDIMessageEventHandler
+	});
+	// display inputs
+	inputsEl.innerHTML = `Inputs: \n${inputs.map(i => i.name).join('\n')}`;
+}
+
 function MIDIMessageEventHandler(event) {
 	if(event.data[1]){
 		var number = event.data[1];
@@ -331,6 +305,14 @@ function MIDIMessageEventHandler(event) {
 				return;
 		}
 	}
+}
+
+function numberToNote(number) {
+	var notes = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
+	var octave = parseInt(number/12, 10);
+	var step = number - octave * 12;
+	var pitch = notes[step];
+	return {pitch: pitch+""+octave, midi: number};
 }
 
 // get audio context instance
@@ -378,18 +360,70 @@ function noteToFrequency(note) {
 	return 440 * Math.pow(2, (keyNumber - 49) / 12);
 }
 
+// ui
+var inputsEl = document.createElement('pre');
+inputsEl.innerHTML = 'Inputs:';
+document.querySelector('#ui').appendChild(inputsEl);
+
 ```
 
 ## Examples
 
-### 2D Platformer
-
-### 3rd view runner
+### The Jam Station
+![jam-station](./assets/img/jam-station.png)
 
 ### The Jam Station
+- Web Based DAW with **WebAudio**, **WebMIDI**, **GamepadAPI** ...
+- includes a Modular Synth and a Beat Sequencer
+- ... Session Manager and MIDI Routing
+- https://github.com/alex-milanov/jam-station
+- https://alex-milanov.github.io/jam-station
+- https://www.youtube.com/watch?v=J-ShH4g7hWM - at Open Fest 2018
+
+### JS Loop Station
+![jam-station](./assets/img/js-loop-station.png)
+
+### JS Loop Station
+- Web Based Looper app
+- Inspiration from Boss/Roland's RC505 Loopstation
+- **WebAudio**, **WebMIDI**, Audio Recording and manipulation
+- https://github.com/alex-milanov/js-loop-station
+- https://alex-milanov.github.io/js-loop-station/dist
+
+### xAmplR
+![jam-station](./assets/img/xamplr.png)
+
+### xAmplR
+- Web based Sampling and Drumpad App, reminiscent of Akai MPC
+- Uses AudioCommons API to search freesound and other CC sample sources
+- Won a price at last years Music Hackathon at Abbey Road Studios
+- https://github.com/alex-milanov/xAmplR
+- https://alex-milanov.github.io/xAmplR/dist/
+
+## Other Examples
+- https://webaudiodemos.appspot.com/
+- http://nicroto.github.io/viktor/
+- https://io808.com/
+- https://www.webaudiomodules.org/wamsynths/dexed
 
 ## Links
-- https://fb.com/groups/musictechbg
+
+### Me
+- http://alexmilanov.com - not touched since 2015
 - https://github.com/alex-milanov
-- https://www.wrlds.com/ - bouncing ball with accelerator
-- [Background Photo](https://unsplash.com/photos/y3FkHW1cyBE) by Arif Wahid on Unsplash
+- https://gitlab.com/alex-milanov
+- [https://twitter.com/alex_milanov_](https://twitter.com/alex_milanov_)
+
+### MusicTechBG
+- https://fb.com/groups/musictechbg
+- http://t.me/musictechbg
+- https://www.meetup.com/MusicTechBG/
+- http://musictech.bg - soon(ish)
+
+### Graphics
+- [Background Photo](https://unsplash.com/photos/HwFv8EZYC_o) by Manuel Sardo on Unsplash
+
+## Next
+![MusicTechMeetupVarna](./assets/img/MusicTechMeetupVarna.png)
+- 18.06 19:30 Music Tech Meetup | Varna vol2
+- https://www.facebook.com/events/461877467905846/

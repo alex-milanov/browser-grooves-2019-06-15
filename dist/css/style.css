@@ -1,7 +1,9 @@
 @charset "UTF-8";
 @import url(//fonts.googleapis.com/css?family=Open+Sans);
-@import url("https://fonts.googleapis.com/css?family=Jura");
-@import url("https://fonts.googleapis.com/css?family=Audiowide|Cabin+Sketch|Londrina+Shadow|Love+Ya+Like+A+Sister|Press+Start+2P");
+@import url("https://fonts.googleapis.com/css?family=Jura:400,500,600,700&display=swap&subset=cyrillic");
+@import url("https://fonts.googleapis.com/css?family=Monoton");
+@import url("https://fonts.googleapis.com/css?family=Londrina+Sketch");
+@import url("https://fonts.googleapis.com/css?family=Slackey");
 /*!
  *  Font Awesome 4.7.0 by @davegandy - http://fontawesome.io - @fontawesome
  *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
@@ -2604,10 +2606,14 @@ body {
   margin: 0px;
   padding: 0px;
   color: #fff;
+  font-size: 1.2em;
   text-shadow: 0px 0px 3px #000;
-  background: url("../assets/img/background.jpg") no-repeat fixed center;
-  background-size: contain;
+  background: url("../assets/img/vinyl2.jpeg") no-repeat fixed center;
+  background-size: cover;
   background-color: #010d09; }
+
+code {
+  font-size: 0.8em; }
 
 h1, h2, h3, h4, h5 {
   margin: 0px;
@@ -2616,9 +2622,12 @@ h1, h2, h3, h4, h5 {
   font-weight: normal; }
 
 h1, h2, h3 {
-  font-family: "Audiowide", cursive;
+  font-family: "Monoton", display;
   text-shadow: 0 0 3px #333;
   color: #eee; }
+
+h1 {
+  font-family: "Monoton", display; }
 
 a {
   color: #bcf;
@@ -2681,8 +2690,8 @@ a {
       .slides section > span a {
         text-decoration: none; }
       .slides section > span img {
-        max-height: 100%;
-        max-width: 100%; }
+        max-height: 512px;
+        max-width: 512px; }
       .slides section > span ul {
         display: inline-block;
         text-align: left; }
@@ -2697,7 +2706,8 @@ a {
   margin: 10px 0px;
   padding: 0px 4px;
   display: inline-block;
-  text-align: left; }
+  text-align: left;
+  font-size: 1em; }
   .codebin code {
     background: rgba(204, 215, 225, 0.6);
     font-family: monospace;

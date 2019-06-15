@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="322px" viewBox="-0.5 -0.5 322 42" content="&lt;mxfile modified=&quot;2019-06-15T08:28:05.315Z&quot; host=&quot;www.draw.io&quot; agent=&quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36&quot; etag=&quot;frVwkvbBxV5lWupopKys&quot; version=&quot;10.7.7&quot; type=&quot;google&quot;&gt;&lt;diagram id=&quot;VqXpNXlvd9ZA95A7D6b3&quot; name=&quot;Page-1&quot;&gt;7VVNc6MwDP01HHeGj7RNji1J2pndbg857F69oIAbgxgjAvTXr8F2iIdJpj20p3Jg0JMsye9ZxovionuUrMqfMQXhhX7aedHaC8NVsFTvAeg1cLMINZBJnmoomIAdfwMD+gZteAq1E0iIgnjlggmWJSTkYExKbN2wPQq3asUymAG7hIk5+oenlGt0Gd5N+BPwLLeVg9uV9vxjySGT2JSmnhdGt+vVzdokLJjNZTZa5yzF9gyKNl4US0TSX0UXgxiotbTpddsL3lPfEkp6z4KO6u1Pme1Fc7fzD/fPSUV/f0Q6y5GJBuw2xmaptwRBqvgyJkrKMcOSic2EPowkwFDGV9YU8wuxUmCgwFcg6o34rCFUUE6FMN6aJB4gRoFyrBltx+fkscIozh50f0NTF3kwUI2NTODK5u1xYzIDuhIXntRSQwBYAMlerZMgGPGj2wczxzE7xU2SqA+jygcUCmYKvdQJF6o0yt9qGGd6uWq0OSfYVWwkolUT7DK/V5ks7yWWg5p7LOl9UlyWbcixZQUXw6XwBOIIxBNmHOYYBAtrm97NnBxBEnTXxZ2LYRYsTZLeNdtpsgM7j/nZVC/8T1IvnKl336QcY7Vt6Ohbu3PtvlA8ZU4X7+g7+7lFm/8=&lt;/diagram&gt;&lt;/mxfile&gt;" onclick="(function(svg){var src=window.event.target||window.event.srcElement;while (src!=null&amp;&amp;src.nodeName.toLowerCase()!='a'){src=src.parentNode;}if(src==null){if(svg.wnd!=null&amp;&amp;!svg.wnd.closed){svg.wnd.focus();}else{var r=function(evt){if(evt.data=='ready'&amp;&amp;evt.source==svg.wnd){svg.wnd.postMessage(decodeURIComponent(svg.getAttribute('content')),'*');window.removeEventListener('message',r);}};window.addEventListener('message',r);svg.wnd=window.open('https://www.draw.io/?client=1&amp;lightbox=1&amp;edit=_blank');}}})(this);" style="cursor:pointer;max-width:100%;max-height:42px;">
+<defs/>
+<g>
+    <path d="M 121 21 L 192.76 21" fill="none" stroke="#ffffff" stroke-width="2" stroke-miterlimit="10" pointer-events="none"/>
+    <path d="M 198.76 21 L 190.76 25 L 192.76 21 L 190.76 17 Z" fill="#ffffff" stroke="#ffffff" stroke-width="2" stroke-miterlimit="10" pointer-events="none"/>
+    <rect x="1" y="1" width="120" height="40" fill="none" stroke="#ffffff" stroke-width="2" pointer-events="none"/>
+    <g transform="translate(14.5,13.5)">
+        <switch>
+            <foreignObject style="overflow:visible;" pointer-events="all" width="91" height="14" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+            <div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; font-size: 14px; font-family: Helvetica; color: rgb(255, 255, 255); line-height: 1.2; vertical-align: top; width: 93px; white-space: nowrap; overflow-wrap: normal; text-align: center;">
+            <div xmlns="http://www.w3.org/1999/xhtml" style="display:inline-block;text-align:inherit;text-decoration:inherit;">OscillatorNode</div>
+        </div>
+    </foreignObject>
+    <text x="46" y="14" fill="#FFFFFF" text-anchor="middle" font-size="14px" font-family="Helvetica">OscillatorNode</text>
+</switch>
+</g>
+<rect x="201" y="1" width="120" height="40" fill="none" stroke="#ffffff" stroke-width="2" pointer-events="none"/>
+<g transform="translate(217.5,13.5)">
+    <switch>
+        <foreignObject style="overflow:visible;" pointer-events="all" width="85" height="14" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+        <div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; font-size: 14px; font-family: Helvetica; color: rgb(255, 255, 255); line-height: 1.2; vertical-align: top; width: 85px; white-space: nowrap; overflow-wrap: normal; text-align: center;">
+        <div xmlns="http://www.w3.org/1999/xhtml" style="display:inline-block;text-align:inherit;text-decoration:inherit;">AudioContext</div>
+    </div>
+</foreignObject>
+<text x="43" y="14" fill="#FFFFFF" text-anchor="middle" font-size="14px" font-family="Helvetica">AudioContext</text>
+</switch>
+</g>
+</g>
+</svg>

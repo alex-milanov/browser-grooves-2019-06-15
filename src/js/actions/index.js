@@ -18,19 +18,19 @@ const initial = {
 	},
 	anim: {
 		top: {
-			in: 'moveFromTop',
+			in: 'fadeIn',
 			out: 'scaleDown'
 		},
 		left: {
-			in: 'moveFromLeft',
+			in: 'fadeIn',
 			out: 'scaleDown'
 		},
 		bottom: {
-			in: 'moveFromBottom',
+			in: 'fadeIn',
 			out: 'scaleDown'
 		},
 		right: {
-			in: 'moveFromRight',
+			in: 'fadeIn',
 			out: 'scaleDown'
 		}
 	}

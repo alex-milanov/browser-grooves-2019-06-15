@@ -7,14 +7,18 @@
 	z-index: 999!important
 
 body
-	font-family: Jura
+	font-family: $slides-font-text
 	margin: 0px
 	padding: 0px
 	color: #fff
+	font-size: 1.2em
 	text-shadow: 0px 0px 3px #000
-	background: url('../assets/img/background.jpg') no-repeat fixed center
-	background-size: contain
+	background: url('../assets/img/vinyl2.jpeg') no-repeat fixed center
+	background-size: cover
 	background-color: #010d09
+
+code
+	font-size: 0.8em
 
 h1, h2, h3, h4, h5
 	+reset
@@ -24,6 +28,10 @@ h1, h2, h3
 	font-family: $slides-font-title
 	text-shadow: 0 0 3px #333
 	color: #eee
+
+h1
+	font-family: $slides-font-title-main
+
 
 a
 	color: #bcf
