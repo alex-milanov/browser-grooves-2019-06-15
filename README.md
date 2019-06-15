@@ -1,13 +1,15 @@
-# Browser grooves
+# Browser grooves 2019-06-15 at VarnaConf
 a Brief introduction to **WebAudio** and **WebMIDI** APIs
+- https://alex-milanov.github.io/browser-grooves-2019-06-15/dist/
+- http://varnaconf.com
 
 ## Motivation
 
 ### Music Tech Meetups
-[![music-tech-meetup-2019-06-11](./assets/img/music-tech-meetup-2019-06-11.png)](./assets/videos/music-tech-meetup-2019-06-11.mp4)
+[![music-tech-meetup-2019-06-11](https://alex-milanov.github.io/browser-grooves-2019-06-15/dist/assets/img/music-tech-meetup-2019-06-11.png)](https://alex-milanov.github.io/browser-grooves-2019-06-15/dist/assets/videos/music-tech-meetup-2019-06-11.mp4)
 
 ### My Framework
-![app-architecture](./assets/img/app-architecture.png)
+![app-architecture](https://alex-milanov.github.io/browser-grooves-2019-06-15/dist/assets/img/app-architecture.png)
 
 ### Example
 ```js
@@ -39,17 +41,17 @@ vdom.patchStream(ui$, document.querySelector('#ui'));
 ```
 
 ## Web Audio
-![patchage](./assets/img/patchage.jpeg)
+![patchage](https://alex-milanov.github.io/browser-grooves-2019-06-15/dist/assets/img/patchage.jpeg)
 
 ### The Context
-![oscillator-basic](./assets/svg/audiocontext.svg)
+![oscillator-basic](https://alex-milanov.github.io/browser-grooves-2019-06-15/dist/assets/svg/audiocontext.svg)
 
 -
 
 `var context = new AudioContext();`
 
 ### Some Oscillation
-![oscillator-basic](./assets/svg/oscillator-basic.svg)
+![oscillator-basic](https://alex-milanov.github.io/browser-grooves-2019-06-15/dist/assets/svg/oscillator-basic.svg)
 
 -
 
@@ -59,7 +61,7 @@ vdom.patchStream(ui$, document.querySelector('#ui'));
 
 
 ### Make some noise
-![oscillator-basic](./assets/svg/oscillator-basic.svg)
+![oscillator-basic](https://alex-milanov.github.io/browser-grooves-2019-06-15/dist/assets/svg/oscillator-basic.svg)
 
 ```js
 // get audio context instance
@@ -85,7 +87,7 @@ document.querySelector('#ui').appendChild(button);
 ```
 
 ### hmm...
-![oscillator-basic](./assets/svg/oscillator-basic.svg)
+![oscillator-basic](https://alex-milanov.github.io/browser-grooves-2019-06-15/dist/assets/svg/oscillator-basic.svg)
 ```js
 // get audio context instance
 var context = new AudioContext()
@@ -115,7 +117,7 @@ document.querySelector('#ui').appendChild(button);
 ```
 
 ### Mega Gain
-![oscillator-basic](./assets/svg/gain.svg)
+![oscillator-basic](https://alex-milanov.github.io/browser-grooves-2019-06-15/dist/assets/svg/gain.svg)
 
 -
 
@@ -126,7 +128,7 @@ document.querySelector('#ui').appendChild(button);
 `volume.connect(context.destination)`
 
 ### Volume Control
-![oscillator-basic](./assets/svg/gain.svg)
+![oscillator-basic](https://alex-milanov.github.io/browser-grooves-2019-06-15/dist/assets/svg/gain.svg)
 ```js
 // get audio context instance
 var context = new AudioContext();
@@ -239,22 +241,22 @@ document.querySelector('#ui').appendChild(button);
 
 
 ## Web MIDI
-![midi-setup](./assets/img/midi-setup.jpg)
+![midi-setup](https://alex-milanov.github.io/browser-grooves-2019-06-15/dist/assets/img/midi-setup.jpg)
 
 ### MIDI
-[![midi-desc](./assets/img/midi-desc.png)](https://en.wikipedia.org/wiki/MIDI)
+[![midi-desc](https://alex-milanov.github.io/browser-grooves-2019-06-15/dist/assets/img/midi-desc.png)](https://en.wikipedia.org/wiki/MIDI)
 - technical standard from early 80s
 - communications protocol, digital interface & electrical connectors
 - (not the piano roll editor)
 
 ### General MIDI
-[![general-midi](./assets/img/general-midi.png)](https://en.wikipedia.org/wiki/General_MIDI)
+[![general-midi](https://alex-milanov.github.io/browser-grooves-2019-06-15/dist/assets/img/general-midi.png)](https://en.wikipedia.org/wiki/General_MIDI)
 - standardized specification for
 - electronic musical instruments that respond to MIDI messages
 - extensions: Yamaha XG, Roland GS
 
 ### MIDI Message
-[![midi-message](./assets/img/midi-message.png)](https://www.midi.org/specifications-old/item/table-1-summary-of-midi-message)
+[![midi-message](https://alex-milanov.github.io/browser-grooves-2019-06-15/dist/assets/img/midi-message.png)](https://www.midi.org/specifications-old/item/table-1-summary-of-midi-message)
 - 3 8bit words (bytes) transmitted serially at a rate of 31.25 kbit/s
 - 1 status and 2 data bytes
 - channel voice: noteOn/noteOff, control change, program change
@@ -380,7 +382,7 @@ document.querySelector('#ui').appendChild(inputsEl);
 ## Apps
 
 ### The Jam Station
-![jam-station](./assets/img/jam-station.png)
+![jam-station](https://alex-milanov.github.io/browser-grooves-2019-06-15/dist/assets/img/jam-station.png)
 
 ### The Jam Station
 - Web Based DAW with **WebAudio**, **WebMIDI**, **GamepadAPI** ...
@@ -391,7 +393,7 @@ document.querySelector('#ui').appendChild(inputsEl);
 - https://www.youtube.com/watch?v=J-ShH4g7hWM - at Open Fest 2018
 
 ### JS Loop Station
-![jam-station](./assets/img/js-loop-station.png)
+![jam-station](https://alex-milanov.github.io/browser-grooves-2019-06-15/dist/assets/img/js-loop-station.png)
 
 ### JS Loop Station
 - Web Based Looper app
@@ -401,7 +403,7 @@ document.querySelector('#ui').appendChild(inputsEl);
 - https://alex-milanov.github.io/js-loop-station/dist
 
 ### xAmplR
-![jam-station](./assets/img/xamplr.png)
+![jam-station](https://alex-milanov.github.io/browser-grooves-2019-06-15/dist/assets/img/xamplr.png)
 
 ### xAmplR
 - Web based Sampling and Drumpad App, reminiscent of Akai MPC
@@ -434,6 +436,6 @@ document.querySelector('#ui').appendChild(inputsEl);
 - [Background Photo](https://unsplash.com/photos/HwFv8EZYC_o) by Manuel Sardo on Unsplash
 
 ## Next
-![MusicTechMeetupVarna](./assets/img/MusicTechMeetupVarna.png)
+![MusicTechMeetupVarna](https://alex-milanov.github.io/browser-grooves-2019-06-15/dist/assets/img/MusicTechMeetupVarna.png)
 - 18.06 19:30 Music Tech Meetup | Varna vol2
 - https://www.facebook.com/events/461877467905846/
