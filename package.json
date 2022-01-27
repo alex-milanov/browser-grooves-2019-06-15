@@ -32,7 +32,7 @@
     "rx": "^4.1.0",
     "rx-node": "^1.0.2",
     "superagent": "^3.3.1",
-    "three": "^0.97.0",
+    "three": "^0.137.0",
     "vm-browserify": "0.0.4"
   },
   "devDependencies": {
